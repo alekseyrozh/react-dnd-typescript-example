@@ -18,6 +18,8 @@ const containerStyle: CSSProperties = {
 export const TutorialApp: FC = () => {
   const game = useMemo(() => new Game(), [])
 
+  console.log(`Render TutorialApp`);
+
   return (
     <div style={containerStyle}>
       <Board game={game} />

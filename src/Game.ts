@@ -1,9 +1,14 @@
 export type Position = [number, number]
 export type PositionObserver = ((position: Position) => void) | null
 
+export type NullablePosition = [number, number] | null
+export type NullablePositionObserver = ((position: NullablePosition) => void) | null
+
 export class Game {
   public knightPosition: Position = [1, 7]
+  public cursorPosition: NullablePosition = null
   private observers: PositionObserver[] = []
+  private cursorObservers: NullablePositionObserver[] = []
 
   public observe(o: PositionObserver): () => void {
     this.observers.push(o)
@@ -11,6 +16,15 @@ export class Game {
 
     return (): void => {
       this.observers = this.observers.filter((t) => t !== o)
+    }
+  }
+
+  public observeCursor(o: NullablePositionObserver): () => void {
+    this.cursorObservers.push(o)
+    this.emitCursorChange()
+
+    return (): void => {
+      this.cursorObservers = this.cursorObservers.filter((t) => t !== o)
     }
   }
 
@@ -30,8 +44,18 @@ export class Game {
     )
   }
 
+  public setCursorPosition(pos: NullablePosition): void {
+    this.cursorPosition = pos
+    this.emitCursorChange()
+  }
+
   private emitChange() {
     const pos = this.knightPosition
     this.observers.forEach((o) => o && o(pos))
+  }
+
+  private emitCursorChange() {
+    const pos = this.cursorPosition
+    this.cursorObservers.forEach((o) => o && o(pos))
   }
 }

@@ -1,6 +1,6 @@
 import { CSSProperties, FC, useEffect, useState } from 'react'
 import { BoardSquare } from './BoardSquare'
-import { Game, Position } from './Game'
+import { Game, NullablePosition, Position } from './Game'
 import { Piece } from './Piece'
 
 export interface BoardProps {
@@ -27,13 +27,28 @@ export const Board: FC<BoardProps> = ({ game }) => {
   )
   useEffect(() => game.observe(setKnightPos))
 
+  const [cursorPosition, setCursorPos] = useState<NullablePosition>(
+    game.cursorPosition,
+  )
+  useEffect(() => game.observeCursor(setCursorPos))
+
+
+  console.log(`Board rerender with ${cursorPosition}`);
+
   function renderSquare(i: number) {
     const x = i % 8
     const y = Math.floor(i / 8)
 
+    let isHighlighted = false
+    if (cursorPosition?.[0] === x) {
+      isHighlighted = true
+    }
+
+    const isOver = cursorPosition?.[0] === x && cursorPosition?.[1] === y
+
     return (
       <div key={i} style={squareStyle}>
-        <BoardSquare x={x} y={y} game={game}>
+        <BoardSquare x={x} y={y} game={game} isHighlighted={isHighlighted} isOver={isOver}>
           <Piece isKnight={x === knightX && y === knightY} />
         </BoardSquare>
       </div>

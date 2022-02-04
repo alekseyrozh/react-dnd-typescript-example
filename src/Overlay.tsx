@@ -4,6 +4,7 @@ export enum OverlayType {
   IllegalMoveHover = 'Illegal',
   LegalMoveHover = 'Legal',
   PossibleMove = 'Possible',
+  Highlighted = 'Legal',
 }
 export interface OverlayProps {
   type: OverlayType
@@ -37,5 +38,7 @@ function getOverlayColor(type: OverlayType): string {
       return 'green'
     case OverlayType.PossibleMove:
       return 'yellow'
+    case OverlayType.Highlighted:
+      return 'blue'
   }
 }
